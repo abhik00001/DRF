@@ -11,3 +11,10 @@ class Company(models.Model):
 
     added_date = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+
+# class Employee(models.Model):
+#     company_name = models.ForeignKey(Company, on_delete=models.CASCADE)
+#     name = models.CharField(max_length=50)
+#     about = models.TextField()
+#     skills = models.CharField(max_length=150)
+#     added_date = models.DateTimeField(auto_now=True)

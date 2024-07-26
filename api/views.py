@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view  
+from django.db.models import Q
 from .models import *
 from .serializers import *
+# from rest_framework.filters import SearchFilter
 
 # Create your views here.
 @api_view(["GET","POST"])
@@ -11,6 +13,7 @@ def companies(request):
 
     if request.method == "GET":
         data_serializer = CompanySerializer(data, many = True)
+    
         return Response({
             "message": "DATA Fetch Successfully",
             "data": data_serializer.data
@@ -62,3 +65,20 @@ def companies_data(request,id):
         return Response({
             "message":"Not valid Function"
         })
+
+@api_view(['GET'])
+def search(request):
+    query = request.query_params.get('search',None)
+    if query:
+        val= Company.objects.filter(
+            Q(name__icontains =query) |
+            Q(location__icontains =query) |
+            Q(about__icontains =query) |
+            Q(company_type__icontains =query) 
+        )
+        data_serializer = CompanySerializer(val,many=True)
+        return Response({
+                "message":f"Data get Successfully",
+                "data": data_serializer.data
+            })
+    
